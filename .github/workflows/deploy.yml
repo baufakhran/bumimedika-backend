@@ -1,0 +1,53 @@
+name: CI/CD Deploy to VPS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    name: Deploy to VPS using Docker
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up SSH key for connecting to VPS
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.1
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      # Generate .env file from GitHub Secrets
+      - name: Create .env file on VPS
+        run: |
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+          echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+
+      # Build Docker image and push to VPS
+      - name: Build Docker image and deploy to VPS
+        run: |
+          # SSH into VPS and deploy the container
+          ssh -o StrictHostKeyChecking=no ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} << 'EOF'
+          cd /home/ubuntu/bumimedika-backend
+
+          # Pull the latest code (if needed) and ensure you have the Dockerfile
+          git pull origin master
+
+          # Build the Docker image
+          docker build -t bumimedika-backend .
+
+          # Stop and remove any previous containers (if any)
+          docker-compose down
+
+          # Start the container with the new image
+          docker-compose up -d --build
+
+          # Optionally: Run a health check or test if the service is up
+          curl --silent --fail http://localhost:8080/health || exit 1
+          EOF
