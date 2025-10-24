@@ -8,6 +8,7 @@ import (
 type IProductService interface {
 	Manage(product *dto.Product) error
 	GetByID(id uint64) (*dto.Product, error)
+	Delete(id uint64) error
 	GetList(name, sortField, sortOrder string, page, limit int) ([]dto.Product, int64, error)
 }
 

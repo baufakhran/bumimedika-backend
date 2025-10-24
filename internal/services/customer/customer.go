@@ -1,4 +1,4 @@
-package product
+package customer
 
 import (
 	"bumimedika-backend/internal/domain/dto"
@@ -6,14 +6,15 @@ import (
 	"gorm.io/gorm"
 )
 
-func (s *productService) Manage(payload *dto.Product) error {
+func (s *custumerService) Manage(payload *dto.Customer) error {
 	product, err := s.GetByID(payload.ID)
 	if err != nil && err.Error() != gorm.ErrRecordNotFound.Error() {
 		return err
 	}
 	if product == nil {
 		productEntity := payload.MapProductDtoToEntity()
-		return s.repo.Create(productEntity)
+		err = s.repo.Create(productEntity)
+		return err
 	} else {
 		productEntity := payload.MapProductDtoToEntity()
 		productEntity.ID = product.ID
@@ -21,15 +22,15 @@ func (s *productService) Manage(payload *dto.Product) error {
 	}
 }
 
-func (s *productService) GetByID(id uint64) (*dto.Product, error) {
+func (s *custumerService) GetByID(id uint64) (*dto.Customer, error) {
 	product, err := s.repo.GetByID(id)
 	if err != nil {
 		return nil, err
 	}
-	return dto.ToProductDto(product), nil
+	return dto.ToCustomerDto(product), nil
 }
 
-func (s *productService) GetList(name, sortField, sortOrder string, page, limit int) ([]dto.Product, int64, error) {
+func (s *custumerService) GetList(name, sortField, sortOrder string, page, limit int) ([]dto.Customer, int64, error) {
 	if page < 1 {
 		page = 1
 	}
@@ -43,10 +44,10 @@ func (s *productService) GetList(name, sortField, sortOrder string, page, limit 
 		return nil, 0, err
 	}
 
-	return dto.ToProductDtoList(listProducts), total, nil
+	return dto.ToCustomerDtoList(listProducts), total, nil
 }
 
-func (s *productService) Delete(id uint64) error {
+func (s *custumerService) Delete(id uint64) error {
 	err := s.repo.Delete(id)
 	if err != nil {
 		return err

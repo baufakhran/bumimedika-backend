@@ -7,7 +7,7 @@ type Product struct {
 	Name          string     `json:"name" gorm:"size:255;not null"`
 	BatchNumber   string     `json:"batch_number" gorm:"size:100;not null"`
 	PurchasePrice float64    `json:"purchase_price" gorm:"type:decimal(15,2);not null"`
-	SellingPrice  float64    `json:"selling_price" gorm:"type:decimal(15,2);not null"`
+	Price         float64    `json:"price" gorm:"type:decimal(15,2);not null"`
 	Stock         uint       `json:"stock" gorm:"default:0"`
 	Sold          uint       `json:"sold" gorm:"default:0"`
 	Unit          string     `json:"unit" gorm:"size:50;not null;default:''"`

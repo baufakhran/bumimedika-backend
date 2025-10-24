@@ -39,8 +39,16 @@ func (r *Routes) registerRoutes(cfg *config.Config, rdb *redis.Client) {
 	api.POST("/register", r.controller.AuthController.Register)
 
 	productRoutes := router.Group("/product")
-	productRoutes.Use(middleware.AuthMiddleware(cfg.JWTKey, rdb))
+	// productRoutes.Use(middleware.AuthMiddleware(cfg.JWTKey, rdb))
 	productRoutes.GET("", r.controller.ProductController.GetList)
 	productRoutes.POST("", r.controller.ProductController.Manage)
 	productRoutes.GET("/:id", r.controller.ProductController.GetByID)
+	productRoutes.DELETE("/:id", r.controller.ProductController.DeleteByID)
+
+	customerRoutes := router.Group("/customer")
+	// customerRoutes.Use(middleware.AuthMiddleware(cfg.JWTKey, rdb))
+	customerRoutes.GET("", r.controller.CustomerController.GetList)
+	customerRoutes.POST("", r.controller.CustomerController.Manage)
+	customerRoutes.GET("/:id", r.controller.CustomerController.GetByID)
+	customerRoutes.DELETE("/:id", r.controller.CustomerController.DeleteByID)
 }

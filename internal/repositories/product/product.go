@@ -28,14 +28,13 @@ func (r *productRepository) GetList(name string, sortField, sortOrder string, li
 	var products []entities.Product
 	var total int64
 
-	query := r.db.Model(&entities.Product{})
+	query := r.db.Model(&entities.Product{}).Where("status = ?", "1")
 
 	// Filtering
 	if name != "" {
 		query = query.Where("name LIKE ?", "%"+name+"%")
 	}
 
-	// Count total before pagination
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
@@ -43,7 +42,7 @@ func (r *productRepository) GetList(name string, sortField, sortOrder string, li
 	// Sort whitelist — protect from SQL injection
 	allowedSortFields := map[string]bool{
 		"id": true, "name": true, "purchase_price": true,
-		"selling_price": true, "stock": true, "sold": true,
+		"price": true, "stock": true, "sold": true,
 		"expired_at": true, "brand": true,
 	}
 
@@ -68,4 +67,8 @@ func (r *productRepository) GetList(name string, sortField, sortOrder string, li
 	}
 
 	return products, total, nil
+}
+
+func (r *productRepository) Delete(id uint64) error {
+	return r.db.Model(&entities.Product{}).Where("id = ?", id).Update("status", "0").Error
 }

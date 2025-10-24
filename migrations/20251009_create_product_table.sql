@@ -5,7 +5,7 @@ CREATE TABLE products (
     name            VARCHAR(255) NOT NULL,
     batch_number    VARCHAR(100) NOT NULL,
     purchase_price  DECIMAL(15,2) NOT NULL,
-    selling_price   DECIMAL(15,2) NOT NULL,
+    price   DECIMAL(15,2) NOT NULL,
     stock           INT UNSIGNED DEFAULT 0,
     sold            INT UNSIGNED DEFAULT 0,
     unit            VARCHAR(50)  NOT NULL DEFAULT '',

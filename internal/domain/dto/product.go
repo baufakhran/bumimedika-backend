@@ -10,7 +10,7 @@ type Product struct {
 	Name          string     `json:"name"`
 	BatchNumber   string     `json:"batch_number"`
 	PurchasePrice float64    `json:"purchase_price"`
-	SellingPrice  float64    `json:"selling_price"`
+	Price         float64    `json:"price"`
 	Stock         uint       `json:"stock"`
 	Sold          uint       `json:"sold"`
 	Unit          string     `json:"unit"`
@@ -33,7 +33,7 @@ func ToProductDto(p *entities.Product) *Product {
 		Name:          p.Name,
 		BatchNumber:   p.BatchNumber,
 		PurchasePrice: p.PurchasePrice,
-		SellingPrice:  p.SellingPrice,
+		Price:         p.Price,
 		Stock:         p.Stock,
 		Sold:          p.Sold,
 		Unit:          p.Unit,
@@ -57,7 +57,7 @@ func (p *Product) MapProductDtoToEntity() *entities.Product {
 		Name:          p.Name,
 		BatchNumber:   p.BatchNumber,
 		PurchasePrice: p.PurchasePrice,
-		SellingPrice:  p.SellingPrice,
+		Price:         p.Price,
 		Stock:         p.Stock,
 		Sold:          p.Sold,
 		Unit:          p.Unit,
